@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ELEVA Río de Janeiro — Reporte Financiero CFO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;1,9..40,400&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --brand: #8B6F5E;
+  --brand-light: #B89B8A;
+  --brand-lighter: #D4B8A8;
+  --brand-bg: #F7F3F0;
+  --bg: #FAFAF8;
+  --card: #FFFFFF;
+  --text: #2C2C2A;
+  --text-secondary: #888780;
+  --text-muted: #B4B2A9;
+  --border: rgba(0,0,0,0.08);
+  --green: #1D9E75;
+  --green-bg: #E1F5EE;
+  --red: #E24B4A;
+  --red-bg: #FCEBEB;
+  --amber: #EF9F27;
+  --amber-bg: #FAEEDA;
+  --blue: #378ADD;
+  --blue-bg: #E6F1FB;
+  --radius: 10px;
+  --radius-lg: 14px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'DM Sans', -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; }
+.page { max-width: 1200px; margin: 0 auto; padding: 24px 32px; }
+
+/* PRINT */
+@media print {
+  body { background: white; }
+  .page { padding: 12px; max-width: 100%; }
+  .no-print { display: none !important; }
+  .kpi-grid, .chart-row, .unit-grid { break-inside: avoid; }
+  .section-title { break-after: avoid; }
+}
+
+/* HEADER */
+.hero-bar {
+  background: linear-gradient(135deg, #6B5548 0%, #8B6F5E 40%, #B89B8A 100%);
+  border-radius: var(--radius-lg);
+  padding: 32px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-bar::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+}
+.hero-bar::after {
+  content: '';
+  position: absolute;
+  bottom: -60px; left: 30%;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.03);
+}
+.hero-left { position: relative; z-index: 1; }
+.hero-brand { font-family: 'Playfair Display', serif; font-size: 12px; letter-spacing: 5px; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 4px; }
+.hero-title { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 500; color: #fff; letter-spacing: 1px; }
+.hero-sub { font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 4px; }
+.hero-right { position: relative; z-index: 1; text-align: right; }
+.hero-right .fibral { font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.9); letter-spacing: 2px; text-transform: uppercase; }
+.hero-right .fibral-sub { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+.hero-right .date { font-size: 13px; color: #fff; margin-top: 12px; font-weight: 500; }
+.hero-right .report-type { font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+
+/* SECTIONS */
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--brand);
+  margin: 32px 0 16px;
+  padding-left: 14px;
+  border-left: 3px solid var(--brand);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* KPI CARDS */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.kpi {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  position: relative;
+  transition: transform 0.15s;
+}
+.kpi:hover { transform: translateY(-2px); }
+.kpi::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  width: 4px;
+  border-radius: var(--radius) 0 0 var(--radius);
+}
+.kpi.green::before { background: var(--green); }
+.kpi.red::before { background: var(--red); }
+.kpi.amber::before { background: var(--amber); }
+.kpi.blue::before { background: var(--blue); }
+.kpi .label { font-size: 10.5px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+.kpi .value { font-size: 24px; font-weight: 500; line-height: 1.1; }
+.kpi .sub { font-size: 11.5px; color: var(--text-secondary); margin-top: 4px; }
+.kpi.red .value { color: var(--red); }
+
+/* CHARTS */
+.chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.chart-card {
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  padding: 20px;
+}
+.chart-card h3 {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 14px;
+}
+.full-chart {
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  padding: 20px;
+}
+.full-chart h3 {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 14px;
+}
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 12px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+.chart-legend span { display: flex; align-items: center; gap: 5px; }
+.chart-legend .dot { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; }
+
+/* UNIT GRID */
+.unit-section-legend {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 12px;
+  font-size: 11.5px;
+  color: var(--text-secondary);
+}
+.unit-section-legend span { display: flex; align-items: center; gap: 6px; }
+.unit-section-legend .dot { width: 10px; height: 10px; border-radius: 3px; }
+.unit-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+}
+.unit-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 12px 10px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.15s;
+}
+.unit-card:hover { transform: translateY(-2px); }
+.unit-card .uid { font-size: 11.5px; font-weight: 500; margin-bottom: 3px; }
+.unit-card .tipo { font-size: 9.5px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.unit-card .price { font-size: 14px; font-weight: 500; margin: 6px 0 2px; }
+.unit-card .pct-text { font-size: 10px; color: var(--text-secondary); }
+.unit-card .bar { position: absolute; bottom: 0; left: 0; height: 3px; transition: width 0.6s ease; }
+.unit-card.vendido { border-top: 3px solid var(--green); }
+.unit-card.vendido .bar { background: var(--green); }
+.unit-card.disponible { border-top: 3px solid var(--blue); }
+.unit-card.disponible .bar { background: var(--blue); }
+.unit-card.permuta { border-top: 3px solid var(--amber); }
+.unit-card.permuta .bar { background: var(--amber); }
+.unit-card.permuta-ap { border-top: 3px solid var(--brand-light); }
+.unit-card.permuta-ap .bar { background: var(--brand-light); }
+
+/* TABLE */
+.table-card {
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.table-card table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.table-card th {
+  text-align: left;
+  padding: 10px 14px;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  background: var(--brand-bg);
+  border-bottom: 1px solid var(--border);
+}
+.table-card td {
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.table-card tr:last-child td { border-bottom: none; }
+.table-card tr:hover td { background: rgba(139,111,94,0.03); }
+.amount { font-weight: 500; text-align: right; }
+.table-card th:last-child { text-align: right; }
+
+/* ALERT BOX */
+.alert-box {
+  background: var(--red-bg);
+  border: 1px solid rgba(226,75,74,0.2);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.alert-box .icon { font-size: 18px; line-height: 1; flex-shrink: 0; margin-top: 1px; }
+.alert-box .alert-content { font-size: 12.5px; color: #791F1F; line-height: 1.6; }
+.alert-box .alert-title { font-weight: 500; font-size: 13px; margin-bottom: 2px; }
+
+/* CF LEGEND */
+.cf-legend {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 10px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+.cf-legend span { display: flex; align-items: center; gap: 5px; }
+.cf-legend .swatch { width: 16px; height: 4px; border-radius: 2px; }
+.cf-legend .line-swatch { width: 16px; height: 2px; border-radius: 1px; }
+
+/* FOOTER */
+.footer {
+  text-align: center;
+  padding: 24px 0 8px;
+  margin-top: 32px;
+  border-top: 1px solid var(--border);
+  font-size: 10.5px;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .chart-row { grid-template-columns: 1fr; }
+  .unit-grid { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 600px) {
+  .page { padding: 16px; }
+  .hero-bar { flex-direction: column; text-align: center; padding: 24px; }
+  .hero-right { text-align: center; margin-top: 16px; }
+  .kpi-grid { grid-template-columns: 1fr 1fr; }
+  .unit-grid { grid-template-columns: repeat(3, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- HERO HEADER -->
+  <div class="hero-bar">
+    <div class="hero-left">
+      <div class="hero-brand">ELEVA</div>
+      <div class="hero-title">Río de Janeiro</div>
+      <div class="hero-sub">Providencia 3a Sección · Guadalajara, Jalisco</div>
+    </div>
+    <div class="hero-right">
+      <div class="fibral">FIBRAL</div>
+      <div class="fibral-sub">Desarrollador Inmobiliario</div>
+      <div class="date">31 de marzo, 2026</div>
+      <div class="report-type">Reporte CFO — Dirección General</div>
+    </div>
+  </div>
+
+  <!-- ALERT -->
+  <div class="alert-box">
+    <div class="icon">&#9888;</div>
+    <div class="alert-content">
+      <div class="alert-title">Alerta: Déficit de utilidades anticipadas</div>
+      Se han anticipado $19.54 MDP en utilidades (1.82x la utilidad real). Esto genera un déficit de $8.79 MDP. La venta del Depto. 302 ($4.99 MDP) es crítica para reducir esta brecha. Se requiere inyectar $8.79 MDP de recursos externos o reducir compromisos pendientes.
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="section-title">Indicadores clave del proyecto</div>
+  <div class="kpi-grid">
+    <div class="kpi green">
+      <div class="label">Valor del proyecto</div>
+      <div class="value">$65.42 MDP</div>
+      <div class="sub">953 m² vendibles · 14 unidades</div>
+    </div>
+    <div class="kpi green">
+      <div class="label">Utilidad bruta</div>
+      <div class="value">$20.89 MDP</div>
+      <div class="sub">Margen 31.93%</div>
+    </div>
+    <div class="kpi blue">
+      <div class="label">EBITDA</div>
+      <div class="value">$15.02 MDP</div>
+      <div class="sub">Margen 22.96%</div>
+    </div>
+    <div class="kpi amber">
+      <div class="label">UAI (Utilidad antes de impuestos)</div>
+      <div class="value">$10.75 MDP</div>
+      <div class="sub">Margen 16.44%</div>
+    </div>
+  </div>
+  <div class="kpi-grid">
+    <div class="kpi red">
+      <div class="label">Utilidades anticipadas</div>
+      <div class="value">$19.54 MDP</div>
+      <div class="sub">1.82x la utilidad real del proyecto</div>
+    </div>
+    <div class="kpi red">
+      <div class="label">Déficit de utilidades</div>
+      <div class="value">-$8.79 MDP</div>
+      <div class="sub">Brecha vs UAI del proyecto</div>
+    </div>
+    <div class="kpi blue">
+      <div class="label">Cobranza en efectivo</div>
+      <div class="value">$13.22 MDP</div>
+      <div class="sub">48.2% del total cobrable</div>
+    </div>
+    <div class="kpi amber">
+      <div class="label">Crédito puente</div>
+      <div class="value">$25.0 MDP</div>
+      <div class="sub">Tasa 19.5% · Banco SAHARA</div>
+    </div>
+  </div>
+
+  <!-- ESTADO DE RESULTADOS -->
+  <div class="section-title">Estado de resultados proforma</div>
+  <div class="chart-row">
+    <div class="chart-card">
+      <h3>Cascada de utilidad (MDP)</h3>
+      <div style="position:relative;height:300px;"><canvas id="waterfall"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Estructura de costos</h3>
+      <div style="position:relative;height:260px;"><canvas id="costPie"></canvas></div>
+      <div class="chart-legend" id="costLegend"></div>
+    </div>
+  </div>
+
+  <!-- INVENTARIO -->
+  <div class="section-title">Tablero de inventario y cobranza</div>
+  <div class="unit-section-legend">
+    <span><span class="dot" style="background:var(--green);"></span> Vendido (11)</span>
+    <span><span class="dot" style="background:var(--blue);"></span> Disponible (1)</span>
+    <span><span class="dot" style="background:var(--amber);"></span> Permuta (1)</span>
+    <span><span class="dot" style="background:var(--brand-light);"></span> Permuta aportante (1)</span>
+  </div>
+  <div class="unit-grid" id="unitGrid"></div>
+
+  <!-- COBRANZA POR UNIDAD -->
+  <div class="section-title">Avance de cobranza por unidad</div>
+  <div class="full-chart">
+    <h3>% cobrado por unidad (solo efectivo real)</h3>
+    <div style="position:relative;height:320px;"><canvas id="cobranzaBar"></canvas></div>
+  </div>
+
+  <!-- FLUJO DE EFECTIVO -->
+  <div class="section-title">Flujo de efectivo del proyecto</div>
+  <div class="full-chart">
+    <div class="cf-legend">
+      <span><span class="swatch" style="background:rgba(29,158,117,0.55);"></span> Ingresos</span>
+      <span><span class="swatch" style="background:rgba(226,75,74,0.55);"></span> Egresos</span>
+      <span><span class="line-swatch" style="background:var(--brand);"></span> Saldo acumulado</span>
+    </div>
+    <h3>Ingresos vs egresos mensuales y saldo acumulado virtual (MDP)</h3>
+    <div style="position:relative;height:320px;"><canvas id="cashflow"></canvas></div>
+  </div>
+
+  <!-- ÚLTIMOS COBROS -->
+  <div class="section-title">Últimos cobros registrados</div>
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Cliente</th>
+          <th>Unidad</th>
+          <th style="text-align:right;">Monto</th>
+        </tr>
+      </thead>
+      <tbody id="paymentsBody"></tbody>
+    </table>
+  </div>
+
+  <!-- DATOS GENERALES -->
+  <div class="section-title">Datos generales del proyecto</div>
+  <div class="chart-row">
+    <div class="chart-card">
+      <h3>Información del desarrollo</h3>
+      <table style="width:100%;font-size:12.5px;border-collapse:collapse;">
+        <tr><td style="padding:6px 0;color:var(--text-secondary);">Ubicación</td><td style="padding:6px 0;text-align:right;font-weight:500;">Río de Janeiro 2647, Providencia 3a Secc.</td></tr>
+        <tr><td style="padding:6px 0;color:var(--text-secondary);border-top:1px solid var(--border);">Superficie terreno</td><td style="padding:6px 0;text-align:right;font-weight:500;border-top:1px solid var(--border);">475.38 m²</td></tr>
+        <tr><td style="padding:6px 0;color:var(--text-secondary);border-top:1px solid var(--border);">Superficie vendible</td><td style="padding:6px 0;text-align:right;font-weight:500;border-top:1px solid var(--border);">953.37 m²</td></tr>
+        <tr><td style="padding:6px 0;color:var(--text-secondary);border-top:1px solid var(--border);">Superficie construcción total</td><td style="padding:6px 0;text-align:right;font-weight:500;border-top:1px solid var(--border);">1,651.36 m²</td></tr>
+        <tr><td style="padding:6px 0;color:var(--text-secondary);border-top:1px solid var(--border);">Costo / m² construido</td><td style="padding:6px 0;text-align:right;font-weight:500;border-top:1px solid var(--border);">$18,478</td></tr>
+        <tr><td style="padding:6px 0;color:var(--text-secondary);border-top:1px solid var(--border);">Precio / m² vendible</td><td style="padding:6px 0;text-align:right;font-weight:500;border-top:1px solid var(--border);">$68,620</td></tr>
+        <tr><td style="padding:6px 0;color:var(--text-secondary);border-top:1px solid var(--border);">Diseño</td><td style="padding:6px 0;text-align:right;font-weight:500;border-top:1px solid var(--border);">APIRON Arquitectura</td></tr>
+      </table>
+    </div>
+    <div class="chart-card">
+      <h3>Condiciones de financiamiento</h3>
+      <table style="width:100%;font-size:12.5px;border-collapse:collapse;">
+        <tr><td style="padding:6px 0;color:var(--text-secondary);">Institución</td><td style="padding:6px 0;text-align:right;font-weight:500;">Banco SAHARA</td></tr>
+        <tr><td style="padding:6px 0;color:var(--text-secondary);border-top:1px solid var(--border);">Línea de crédito</td><td style="padding:6px 0;text-align:right;font-weight:500;border-top:1px solid var(--border);">$25,000,000</td></tr>
+        <tr><td style="padding:6px 0;color:var(--text-secondary);border-top:1px solid var(--border);">Anticipo</td><td style="padding:6px 0;text-align:right;font-weight:500;border-top:1px solid var(--border);">$3,750,000 (15%)</td></tr>
+        <tr><td style="padding:6px 0;color:var(--text-secondary);border-top:1px solid var(--border);">Ministraciones</td><td style="padding:6px 0;text-align:right;font-weight:500;border-top:1px solid var(--border);">$21,250,000 (85%)</td></tr>
+        <tr><td style="padding:6px 0;color:var(--text-secondary);border-top:1px solid var(--border);">TIIE + Spread</td><td style="padding:6px 0;text-align:right;font-weight:500;border-top:1px solid var(--border);">7.3% + 12.2%</td></tr>
+        <tr><td style="padding:6px 0;color:var(--text-secondary);border-top:1px solid var(--border);">Tasa compuesta</td><td style="padding:6px 0;text-align:right;font-weight:500;border-top:1px solid var(--border);color:var(--red);">19.5%</td></tr>
+        <tr><td style="padding:6px 0;color:var(--text-secondary);border-top:1px solid var(--border);">Comisiones</td><td style="padding:6px 0;text-align:right;font-weight:500;border-top:1px solid var(--border);">4.64%</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    ELEVA RÍO DE JANEIRO — Control Financiero de Proyecto<br>
+    FIBRAL Desarrollador Inmobiliario · Grupo Capital OM · Home Desarrollo<br>
+    Documento confidencial — Generado el 13 de abril, 2026
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const B = '#8B6F5E';
+const BL = '#B89B8A';
+const BLL = '#D4B8A8';
+const G = '#1D9E75';
+const R = '#E24B4A';
+const A = '#EF9F27';
+const BLU = '#378ADD';
+const GRY = '#73726c';
+const PUR = '#AFA9EC';
+const txtCol = '#888780';
+const gridCol = 'rgba(0,0,0,0.05)';
+
+// ====== WATERFALL ======
+const wLabels = ['Ventas','Costo de venta','Ut. bruta','Costos operativos','EBITDA','Costo financiero','UAI'];
+const wVals = [65.42, -44.53, 20.89, -5.87, 15.02, -4.27, 10.75];
+let wBases=[], wTops=[], wColors=[], running=0;
+wVals.forEach((v,i) => {
+  if (i===0||i===2||i===4||i===6) { wBases.push(0); wTops.push(v); wColors.push(G); running=v; }
+  else { wBases.push(running+v); wTops.push(-v); wColors.push(R); running+=v; }
+});
+new Chart(document.getElementById('waterfall'), {
+  type:'bar',
+  data:{ labels:wLabels, datasets:[
+    {data:wBases, backgroundColor:'transparent', borderWidth:0, stack:'a'},
+    {data:wTops, backgroundColor:wColors, borderRadius:4, stack:'a'}
+  ]},
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}, tooltip:{callbacks:{label:c=>'$'+Math.abs(c.raw).toFixed(2)+' MDP'}}},
+    scales:{
+      x:{grid:{display:false}, ticks:{color:txtCol, font:{size:10, family:'DM Sans'}, maxRotation:45, autoSkip:false}},
+      y:{grid:{color:gridCol}, ticks:{color:txtCol, font:{size:10}, callback:v=>'$'+v+'M'}}
+    }
+  }
+});
+
+// ====== COST PIE ======
+const costData = [
+  {name:'Edificación',value:30.51,color:B},
+  {name:'Terreno',value:11.22,color:BL},
+  {name:'Costo financiero',value:4.27,color:R},
+  {name:'Indirectos',value:2.80,color:BLL},
+  {name:'Gastos operativos',value:2.62,color:A},
+  {name:'Publicidad y ventas',value:2.11,color:BLU},
+  {name:'Postventa',value:0.75,color:GRY},
+  {name:'Fideicomiso',value:0.39,color:PUR},
+];
+const costTotal = costData.reduce((s,c)=>s+c.value,0);
+new Chart(document.getElementById('costPie'), {
+  type:'doughnut',
+  data:{labels:costData.map(c=>c.name), datasets:[{data:costData.map(c=>c.value), backgroundColor:costData.map(c=>c.color), borderWidth:2, borderColor:'#fff'}]},
+  options:{responsive:true, maintainAspectRatio:false, cutout:'52%', plugins:{legend:{display:false}}}
+});
+const leg=document.getElementById('costLegend');
+costData.forEach(c=>{
+  const pct = Math.round(c.value/costTotal*100);
+  leg.innerHTML+=`<span><span class="dot" style="background:${c.color};"></span>${c.name} ${pct}%</span>`;
+});
+
+// ====== UNITS ======
+const units = [
+  {id:"Local 01",tipo:"LOCAL · PB",estatus:"Vendido",precio:3152000,pct:29.6},
+  {id:"Local 02",tipo:"LOCAL · PB",estatus:"Vendido",precio:2855250,pct:14.0},
+  {id:"Local 03",tipo:"LOCAL · PB",estatus:"Vendido",precio:4270000,pct:34.1},
+  {id:"Local 04",tipo:"LOCAL · PB",estatus:"Vendido",precio:1732500,pct:41.7},
+  {id:"Local 05",tipo:"LOCAL · PB",estatus:"Vendido",precio:2843240,pct:22.0},
+  {id:"Depto. 101",tipo:"TIPO 1 · N1",estatus:"Permuta aportante",precio:8500000,pct:0},
+  {id:"Depto. 102",tipo:"TIPO 2 · N1",estatus:"Vendido",precio:4550000,pct:33.3},
+  {id:"Depto. 103",tipo:"TIPO 3 · N1",estatus:"Vendido",precio:3700000,pct:27.2},
+  {id:"Depto. 201",tipo:"TIPO 1 · N2",estatus:"Permuta",precio:8000000,pct:0},
+  {id:"Depto. 202",tipo:"TIPO 2 · N2",estatus:"Vendido",precio:4700000,pct:68.0},
+  {id:"Depto. 203",tipo:"TIPO 3 · N2",estatus:"Vendido",precio:4250000,pct:30.6},
+  {id:"Depto. 301",tipo:"TIPO 1 · N3",estatus:"Vendido",precio:7576200,pct:100},
+  {id:"Depto. 302",tipo:"TIPO 2 · N3",estatus:"Disponible",precio:4986075,pct:0},
+  {id:"Depto. 303",tipo:"TIPO 3 · N3",estatus:"Vendido",precio:4304640,pct:48.1},
+];
+const grid = document.getElementById('unitGrid');
+units.forEach(u=>{
+  const cls = u.estatus==='Vendido'?'vendido':u.estatus==='Disponible'?'disponible':u.estatus==='Permuta'?'permuta':'permuta-ap';
+  grid.innerHTML+=`<div class="unit-card ${cls}"><div class="uid">${u.id}</div><div class="tipo">${u.tipo}</div><div class="price">$${(u.precio/1000000).toFixed(2)}M</div><div class="pct-text">${u.pct}% cobrado</div><div class="bar" style="width:${u.pct}%"></div></div>`;
+});
+
+// ====== COBRANZA BAR ======
+const cobLabels = units.filter(u=>u.estatus==='Vendido').map(u=>u.id);
+const cobPcts = units.filter(u=>u.estatus==='Vendido').map(u=>u.pct);
+const cobColors = cobPcts.map(p => p >= 80 ? G : p >= 40 ? A : BLU);
+new Chart(document.getElementById('cobranzaBar'), {
+  type:'bar',
+  data:{labels:cobLabels, datasets:[{data:cobPcts, backgroundColor:cobColors, borderRadius:4, barThickness:24}]},
+  options:{
+    indexAxis:'y', responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}, tooltip:{callbacks:{label:c=>c.raw+'%'}}},
+    scales:{
+      x:{max:110, grid:{color:gridCol}, ticks:{color:txtCol, font:{size:10}, callback:v=>v+'%'}},
+      y:{grid:{display:false}, ticks:{color:txtCol, font:{size:10, family:'DM Sans'}}}
+    }
+  }
+});
+
+// ====== CASH FLOW ======
+const cfLabels = ['Oct 23','Nov','Dic','Ene 24','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic','Ene 25','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep 25','Oct','Nov','Dic','Ene 26','Feb','Mar','Abr 26','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic','Ene 27','Feb','Mar','Abr','May','Jun','Jul 27'];
+const cfIng = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.30,0,0.91,0,1.15,0,0.06,0.05,3.38,1.01,0.43,0.71,0.13,0.15,3.93,1.38,0.57,6.17,0.19,5.94,2.18,1.98,2.28,1.90,1.90,2.20,1.90,1.90,16.78,5.56,19.37];
+const cfEgr = [0.06,0.10,0.09,0.16,0.06,0.06,0.09,0.06,0.06,0.06,0.06,0.06,0.07,0.06,0.06,0.06,0.09,0.06,0.33,0.22,0.10,0.39,0.33,0.67,0.37,0.07,0.64,0.19,0.58,1.05,2.18,1.33,4.36,4.20,2.32,3.05,2.77,2.19,2.11,2.15,2.01,2.08,2.07,15.81,7.08,12.72];
+const cfSaldo = [-0.06,-0.15,-0.24,-0.40,-0.46,-0.52,-0.61,-0.67,-0.73,-0.78,-0.84,-0.90,-0.97,-1.03,-1.09,0.15,0.06,0.91,0.58,1.51,1.41,1.07,0.80,3.51,4.15,4.51,4.58,4.52,4.10,6.98,6.18,5.41,7.23,3.22,6.84,5.96,5.17,5.25,5.04,4.80,4.99,4.81,4.64,5.61,4.10,10.75];
+new Chart(document.getElementById('cashflow'), {
+  type:'bar',
+  data:{
+    labels:cfLabels,
+    datasets:[
+      {label:'Ingresos',data:cfIng,backgroundColor:'rgba(29,158,117,0.5)',borderRadius:2,order:2},
+      {label:'Egresos',data:cfEgr.map(v=>-v),backgroundColor:'rgba(226,75,74,0.45)',borderRadius:2,order:3},
+      {label:'Saldo acumulado',data:cfSaldo,type:'line',borderColor:B,backgroundColor:'transparent',borderWidth:2.5,pointRadius:0,tension:0.3,order:1}
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}, tooltip:{callbacks:{label:c=>c.dataset.label+': $'+Math.abs(c.raw).toFixed(2)+' MDP'}}},
+    scales:{
+      x:{grid:{display:false}, ticks:{color:txtCol, font:{size:8.5}, maxRotation:60, autoSkip:true, maxTicksLimit:20}, stacked:true},
+      y:{grid:{color:gridCol}, ticks:{color:txtCol, font:{size:10}, callback:v=>'$'+v+'M'}, stacked:true}
+    }
+  }
+});
+
+// ====== PAYMENTS TABLE ======
+const pagos = [
+  {fecha:'17/03/2026',cliente:'ANA MARÍA FIGUEROA ORENDAIN',depto:'Depto. 203',monto:1290000},
+  {fecha:'17/03/2026',cliente:'JOSÉ ANTONIO JAIME CORREA',depto:'Local 01',monto:150000},
+  {fecha:'17/03/2026',cliente:'CELESTE CAPITAL (Local 05)',depto:'Local 05',monto:45000},
+  {fecha:'10/03/2026',cliente:'JESSICA SOFÍA GUTIERREZ',depto:'Local 04',monto:38500},
+  {fecha:'02/03/2026',cliente:'MIRIAM PRISCILA MONTILLA',depto:'Depto. 303',monto:670000},
+  {fecha:'27/02/2026',cliente:'MIROSLABA RODRIGUEZ PUENTE',depto:'Depto. 102',monto:50556},
+  {fecha:'16/02/2026',cliente:'CELESTE CAPITAL (Local 05)',depto:'Local 05',monto:45000},
+  {fecha:'13/02/2026',cliente:'JESSICA SOFÍA GUTIERREZ',depto:'Local 04',monto:38500},
+  {fecha:'30/01/2026',cliente:'MIROSLABA RODRIGUEZ PUENTE',depto:'Depto. 102',monto:50556},
+  {fecha:'15/01/2026',cliente:'CELESTE CAPITAL (Local 05)',depto:'Local 05',monto:45000},
+  {fecha:'12/01/2026',cliente:'JESSICA SOFÍA GUTIERREZ',depto:'Local 04',monto:38500},
+  {fecha:'30/12/2025',cliente:'MIROSLABA RODRIGUEZ PUENTE',depto:'Depto. 102',monto:50556},
+];
+const tbody = document.getElementById('paymentsBody');
+pagos.forEach(p=>{
+  tbody.innerHTML+=`<tr><td>${p.fecha}</td><td>${p.cliente}</td><td>${p.depto}</td><td class="amount">$${p.monto.toLocaleString('es-MX')}</td></tr>`;
+});
+</script>
+
+</body>
+</html>
