@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ELEVA Río de Janeiro · Dashboard CFO</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--b:#8B6F5E;--bl:#B89B8A;--bll:#D4B8A8;--bg:#FAFAF8;--card:#fff;--tx:#2C2C2A;--tx2:#888780;--tx3:#B4B2A9;--brd:rgba(0,0,0,.08);--g:#1D9E75;--gbg:#E1F5EE;--r:#E24B4A;--rbg:#FCEBEB;--a:#EF9F27;--abg:#FAEEDA;--blu:#378ADD;--blubg:#E6F1FB;--rd:10px;--rdl:14px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);line-height:1.5;font-size:13px}
+.page{max-width:1240px;margin:0 auto;padding:20px 28px}
+@media print{body{background:#fff}.page{padding:8px;max-width:100%}.tab-bar,.no-print{display:none!important}}
+
+.hero{background:linear-gradient(135deg,#6B5548,#8B6F5E 40%,#B89B8A);border-radius:var(--rdl);padding:28px 36px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.06)}
+.hero .brand{font-family:'Playfair Display',serif;font-size:11px;letter-spacing:5px;text-transform:uppercase;color:rgba(255,255,255,.55)}
+.hero .title{font-family:'Playfair Display',serif;font-size:28px;font-weight:500;color:#fff}
+.hero .sub{font-size:12px;color:rgba(255,255,255,.65);margin-top:3px}
+.hero .right{text-align:right;position:relative;z-index:1}
+.hero .fibral{font-size:13px;font-weight:500;color:rgba(255,255,255,.85);letter-spacing:2px;text-transform:uppercase}
+.hero .date{font-size:12px;color:#fff;margin-top:8px;font-weight:500}
+.hero .rtype{font-size:10.5px;color:rgba(255,255,255,.55);margin-top:2px}
+
+.tab-bar{display:flex;gap:4px;margin-bottom:20px;border-bottom:1px solid var(--brd);padding-bottom:0;overflow-x:auto}
+.tab-btn{padding:9px 18px;font-size:11.5px;font-weight:500;color:var(--tx2);background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:.15s}
+.tab-btn:hover{color:var(--tx)}
+.tab-btn.active{color:var(--b);border-bottom-color:var(--b)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+.st{font-family:'Playfair Display',serif;font-size:14px;font-weight:500;color:var(--b);margin:24px 0 12px;padding-left:12px;border-left:3px solid var(--b);letter-spacing:.8px;text-transform:uppercase}
+.st:first-child{margin-top:0}
+
+.kg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:10px}
+.k{background:var(--card);border-radius:var(--rd);padding:14px 16px;border:1px solid var(--brd);position:relative}
+.k::before{content:'';position:absolute;top:0;left:0;bottom:0;width:4px;border-radius:var(--rd) 0 0 var(--rd)}
+.k.g::before{background:var(--g)}.k.r::before{background:var(--r)}.k.a::before{background:var(--a)}.k.bl::before{background:var(--blu)}
+.k .l{font-size:10px;color:var(--tx2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px}
+.k .v{font-size:22px;font-weight:500;line-height:1.1}
+.k .s{font-size:11px;color:var(--tx2);margin-top:3px}
+.k.r .v{color:var(--r)}
+
+.cr{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.cc{background:var(--card);border-radius:var(--rdl);border:1px solid var(--brd);padding:18px}
+.cc h3{font-size:11px;font-weight:500;color:var(--tx2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:12px}
+.fc{background:var(--card);border-radius:var(--rdl);border:1px solid var(--brd);padding:18px;margin-bottom:12px}
+.fc h3{font-size:11px;font-weight:500;color:var(--tx2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:12px}
+
+.lg{display:flex;flex-wrap:wrap;gap:14px;font-size:11px;color:var(--tx2);margin-bottom:10px}
+.lg span{display:flex;align-items:center;gap:5px}
+.lg .d{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+
+.alert{background:var(--rbg);border:1px solid rgba(226,75,74,.2);border-radius:var(--rd);padding:14px 18px;margin-bottom:14px;display:flex;gap:10px;font-size:12px;color:#791F1F;line-height:1.6}
+.alert b{font-size:12.5px}
+
+.tbl{width:100%;border-collapse:collapse;font-size:11.5px}
+.tbl th{text-align:left;padding:8px 10px;font-size:9.5px;font-weight:500;color:var(--tx2);text-transform:uppercase;letter-spacing:.6px;background:#F7F3F0;border-bottom:1px solid var(--brd)}
+.tbl td{padding:7px 10px;border-bottom:1px solid var(--brd)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:rgba(139,111,94,.02)}
+.tbl .ar{text-align:right}
+.tbl .fw{font-weight:500}
+.tbl .tot{font-weight:500;background:#F7F3F0}
+
+.pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:500}
+.pill.gn{background:var(--gbg);color:#0F6E56}
+.pill.rd{background:var(--rbg);color:#993556}
+.pill.am{background:var(--abg);color:#854F0B}
+.pill.bu{background:var(--blubg);color:#185FA5}
+.pill.gy{background:#F1EFE8;color:#5F5E5A}
+
+.edorow{display:flex;align-items:center;padding:6px 0;border-bottom:1px solid var(--brd);font-size:12.5px}
+.edorow:last-child{border-bottom:none}
+.edorow .name{flex:1}
+.edorow .pct{width:65px;text-align:right;color:var(--tx2);font-size:11px}
+.edorow .amt{width:110px;text-align:right;font-weight:500}
+.edorow.hdr{font-size:10px;color:var(--tx2);text-transform:uppercase;letter-spacing:.5px;font-weight:500;border-bottom:1px solid var(--b);padding-bottom:4px}
+.edorow.sub{font-weight:500;color:var(--b);font-size:13px;border-top:2px solid var(--b);padding-top:6px;margin-top:2px}
+.edorow.neg .amt{color:var(--r)}
+.edorow.indent .name{padding-left:16px;color:var(--tx2)}
+
+.bar-h{height:24px;border-radius:4px;display:flex;overflow:hidden;margin:8px 0}
+.bar-h div{height:100%;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;font-weight:500}
+
+.ug{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px}
+.uc{background:var(--card);border-radius:var(--rd);border:1px solid var(--brd);padding:10px;text-align:center;position:relative;overflow:hidden}
+.uc .uid{font-size:11px;font-weight:500;margin-bottom:2px}
+.uc .utp{font-size:9px;color:var(--tx3);text-transform:uppercase;letter-spacing:.4px}
+.uc .upr{font-size:13px;font-weight:500;margin:5px 0 2px}
+.uc .upct{font-size:9.5px;color:var(--tx2)}
+.uc .ubar{position:absolute;bottom:0;left:0;height:3px}
+.uc.vnd{border-top:3px solid var(--g)}.uc.vnd .ubar{background:var(--g)}
+.uc.dis{border-top:3px solid var(--blu)}.uc.dis .ubar{background:var(--blu)}
+.uc.prm{border-top:3px solid var(--a)}.uc.prm .ubar{background:var(--a)}
+.uc.pra{border-top:3px solid var(--bl)}.uc.pra .ubar{background:var(--bl)}
+
+.footer{text-align:center;padding:20px 0 6px;margin-top:28px;border-top:1px solid var(--brd);font-size:10px;color:var(--tx3);letter-spacing:.4px}
+
+.filter-bar{display:flex;gap:10px;margin-bottom:14px;align-items:center;font-size:11.5px}
+.filter-bar label{color:var(--tx2);font-weight:500}
+.filter-bar select{padding:6px 12px;border:1px solid var(--brd);border-radius:var(--rd);font-size:11.5px;font-family:inherit;background:var(--card);color:var(--tx);cursor:pointer}
+
+@media(max-width:900px){.kg{grid-template-columns:repeat(2,1fr)}.cr{grid-template-columns:1fr}.ug{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:600px){.page{padding:14px}.hero{flex-direction:column;text-align:center;padding:20px}.hero .right{text-align:center;margin-top:12px}.kg{grid-template-columns:1fr 1fr}.ug{grid-template-columns:repeat(3,1fr)}.tab-btn{padding:8px 12px;font-size:10.5px}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="hero">
+<div style="position:relative;z-index:1"><div class="brand">ELEVA</div><div class="title">Río de Janeiro</div><div class="sub">Providencia 3a Sección · Guadalajara, Jalisco</div></div>
+<div class="right"><div class="fibral">FIBRAL</div><div style="font-size:10px;color:rgba(255,255,255,.45);margin-top:1px">Desarrollador Inmobiliario</div><div class="date">31 de marzo, 2026</div><div class="rtype">Reporte CFO — Dirección General</div></div>
+</div>
+
+<div class="tab-bar">
+<button class="tab-btn active" onclick="showTab('resumen')">Resumen ejecutivo</button>
+<button class="tab-btn" onclick="showTab('ingresos')">Análisis de ingresos</button>
+<button class="tab-btn" onclick="showTab('egresos')">Análisis de egresos</button>
+<button class="tab-btn" onclick="showTab('flujo')">Flujo de efectivo</button>
+<button class="tab-btn" onclick="showTab('utilidades')">Desglose de utilidades</button>
+<button class="tab-btn" onclick="showTab('financiamiento')">Financiamiento</button>
+</div>
+
+<!-- ==================== TAB 1: RESUMEN ==================== -->
+<div id="resumen" class="tab-panel active">
+
+<div class="alert"><span style="font-size:16px;flex-shrink:0">&#9888;</span><div><b>Alerta: Déficit de utilidades anticipadas</b><br>Se han anticipado $19.54 MDP (1.82x la UAI). Déficit de $8.79 MDP. La venta del Depto. 302 ($4.99 MDP) y el control estricto de cobranza son críticos para cerrar esta brecha.</div></div>
+
+<div class="st">Indicadores clave del proyecto</div>
+<div class="kg">
+<div class="k g"><div class="l">Valor del proyecto</div><div class="v">$65.42M</div><div class="s">953 m² vendibles · 14 unidades</div></div>
+<div class="k g"><div class="l">Utilidad bruta</div><div class="v">$20.89M</div><div class="s">Margen 31.93%</div></div>
+<div class="k bl"><div class="l">EBITDA</div><div class="v">$15.02M</div><div class="s">Margen 22.96%</div></div>
+<div class="k a"><div class="l">UAI</div><div class="v">$10.75M</div><div class="s">Margen 16.44%</div></div>
+</div>
+<div class="kg">
+<div class="k r"><div class="l">Utilidades anticipadas</div><div class="v">$19.54M</div><div class="s">1.82x la utilidad real</div></div>
+<div class="k r"><div class="l">Déficit de utilidades</div><div class="v">-$8.79M</div><div class="s">Brecha vs UAI del proyecto</div></div>
+<div class="k bl"><div class="l">Cobranza efectivo</div><div class="v">$13.22M</div><div class="s">48.2% del cobrable en efectivo</div></div>
+<div class="k a"><div class="l">Crédito puente SAHARA</div><div class="v">$25.0M</div><div class="s">Tasa compuesta 19.5%</div></div>
+</div>
+
+<div class="st">Estado de resultados proforma</div>
+<div class="cr">
+<div class="cc">
+<h3>Estado de resultados</h3>
+<div class="edorow hdr"><div class="name">Concepto</div><div class="pct">Incidencia</div><div class="amt">Importe</div></div>
+<div class="edorow"><div class="name" style="font-weight:500">Ventas totales</div><div class="pct">100%</div><div class="amt">$65,419,905</div></div>
+<div class="edorow indent neg"><div class="name">Terreno (land cost)</div><div class="pct">17.15%</div><div class="amt">($11,220,000)</div></div>
+<div class="edorow indent neg"><div class="name">Indirectos (soft cost)</div><div class="pct">4.28%</div><div class="amt">($2,797,374)</div></div>
+<div class="edorow indent neg"><div class="name">Edificación (hard cost)</div><div class="pct">46.64%</div><div class="amt">($30,513,285)</div></div>
+<div class="edorow sub"><div class="name">Utilidad bruta</div><div class="pct">31.93%</div><div class="amt">$20,889,245</div></div>
+<div class="edorow indent neg"><div class="name">Gastos operativos (fee 4%)</div><div class="pct">4.00%</div><div class="amt">($2,616,796)</div></div>
+<div class="edorow indent neg"><div class="name">Publicidad y comisiones</div><div class="pct">3.23%</div><div class="amt">($2,112,385)</div></div>
+<div class="edorow indent neg"><div class="name">Postventa y servicios</div><div class="pct">1.14%</div><div class="amt">($747,000)</div></div>
+<div class="edorow indent neg"><div class="name">Fideicomiso</div><div class="pct">0.60%</div><div class="amt">($391,500)</div></div>
+<div class="edorow sub"><div class="name">EBITDA</div><div class="pct">22.96%</div><div class="amt">$15,021,564</div></div>
+<div class="edorow indent neg"><div class="name">Comisiones bancarias</div><div class="pct">1.99%</div><div class="amt">($1,305,000)</div></div>
+<div class="edorow indent neg"><div class="name">Intereses crédito puente</div><div class="pct">4.53%</div><div class="amt">($2,963,748)</div></div>
+<div class="edorow sub"><div class="name">UAI</div><div class="pct">16.44%</div><div class="amt">$10,752,816</div></div>
+</div>
+<div class="cc">
+<h3>Cascada de utilidad (MDP)</h3>
+<div style="position:relative;height:300px"><canvas id="c_wf"></canvas></div>
+</div>
+</div>
+
+<div class="st">Posición real de caja</div>
+<div class="kg">
+<div class="k g"><div class="l">Total ingresado real</div><div class="v">$13.22M</div><div class="s">Cobros en efectivo al corte</div></div>
+<div class="k a"><div class="l">Total egresado real</div><div class="v">$4.54M</div><div class="s">Pagos reales registrados</div></div>
+<div class="k g"><div class="l">Flujo neto real</div><div class="v">+$8.69M</div><div class="s">Pre-obra, antes de construcción</div></div>
+<div class="k bl"><div class="l">Por cobrar (vendidos)</div><div class="v">$14.21M</div><div class="s">Cuentas por cobrar firmadas</div></div>
+</div>
+</div>
+
+<!-- ==================== TAB 2: INGRESOS ==================== -->
+<div id="ingresos" class="tab-panel">
+
+<div class="st">Composición de ingresos del proyecto</div>
+<div class="cr">
+<div class="cc">
+<h3>Origen de los ingresos — $65.42 MDP</h3>
+<div style="position:relative;height:280px"><canvas id="c_ing_pie"></canvas></div>
+<div class="lg" id="ingLeg" style="margin-top:10px"></div>
+</div>
+<div class="cc">
+<h3>Desglose de ingresos por tipo</h3>
+<div class="edorow hdr"><div class="name">Concepto</div><div class="pct">% Total</div><div class="amt">Importe</div></div>
+<div class="edorow"><div class="name"><b>Ventas en efectivo</b> (11 unidades)</div><div class="pct">41.93%</div><div class="amt">$27,433,830</div></div>
+<div class="edorow indent"><div class="name">Cobrado a la fecha</div><div class="pct"></div><div class="amt" style="color:var(--g)">$13,220,910</div></div>
+<div class="edorow indent"><div class="name">Por cobrar (durante obra)</div><div class="pct"></div><div class="amt" style="color:var(--a)">$7,243,833</div></div>
+<div class="edorow indent"><div class="name">Por cobrar (al cierre / escrituración)</div><div class="pct"></div><div class="amt" style="color:var(--blu)">$6,969,087</div></div>
+<div class="edorow"><div class="name"><b>Permuta aportante terreno</b> — Depto. 101</div><div class="pct">12.99%</div><div class="amt">$8,500,000</div></div>
+<div class="edorow indent"><div class="name">Enrique González Medina · no genera flujo efectivo</div><div class="pct"></div><div class="amt" style="color:var(--tx3)">$0 cash</div></div>
+<div class="edorow"><div class="name"><b>Permuta de obra</b> — Depto. 201</div><div class="pct">12.23%</div><div class="amt">$8,000,000</div></div>
+<div class="edorow indent"><div class="name">Ramón Martínez · pago en especie (trabajo de obra)</div><div class="pct"></div><div class="amt" style="color:var(--tx3)">$0 cash</div></div>
+<div class="edorow"><div class="name"><b>Depto. 302 — Pago pasivo IAC</b></div><div class="pct">7.62%</div><div class="amt">$4,986,075</div></div>
+<div class="edorow indent"><div class="name">Disponible en tablero pero asignado a cubrir deuda IAC de Occidente</div><div class="pct"></div><div class="amt" style="color:var(--r)">Comprometido</div></div>
+<div class="edorow"><div class="name"><b>Crédito puente SAHARA</b></div><div class="pct">30.53%</div><div class="amt">$25,000,000</div></div>
+<div class="edorow indent"><div class="name">Anticipo $3.75M + Ministraciones $21.25M</div><div class="pct"></div><div class="amt"></div></div>
+<div class="edorow sub"><div class="name">Total fuentes</div><div class="pct"></div><div class="amt">$73.92M</div></div>
+</div>
+</div>
+
+<div class="st">Tablero de inventario</div>
+<div class="lg">
+<span><span class="d" style="background:var(--g)"></span>Vendido (11)</span>
+<span><span class="d" style="background:var(--blu)"></span>Disponible / IAC (1)</span>
+<span><span class="d" style="background:var(--a)"></span>Permuta obra (1)</span>
+<span><span class="d" style="background:var(--bl)"></span>Permuta terreno (1)</span>
+</div>
+<div class="ug" id="unitGrid"></div>
+
+<div class="st" style="margin-top:20px">Avance de cobranza por unidad (solo efectivo)</div>
+<div class="fc">
+<div style="position:relative;height:320px"><canvas id="c_cob"></canvas></div>
+</div>
+
+<div class="st">Detalle de unidades</div>
+<div class="filter-bar">
+<label>Filtrar por estatus:</label>
+<select id="filterEstatus" onchange="filterUnits()">
+<option value="all">Todos</option>
+<option value="Vendido">Vendido</option>
+<option value="Disponible">Disponible</option>
+<option value="Permuta">Permuta obra</option>
+<option value="Permuta aportante">Permuta terreno</option>
+</select>
+<label style="margin-left:12px">Filtrar por nivel:</label>
+<select id="filterNivel" onchange="filterUnits()">
+<option value="all">Todos</option>
+<option value="PB">PB (Locales)</option>
+<option value="N1">Nivel 1</option>
+<option value="N2">Nivel 2</option>
+<option value="N3">Nivel 3</option>
+</select>
+</div>
+<div class="fc" style="padding:0;overflow:hidden">
+<table class="tbl" id="unitsTable">
+<thead><tr><th>Unidad</th><th>Modelo</th><th>Nivel</th><th>m²</th><th class="ar">Precio lista</th><th class="ar">Precio venta</th><th>Estatus</th><th class="ar">Cobrado</th><th class="ar">% Cobrado</th><th class="ar">Por cobrar</th><th>Comprador</th></tr></thead>
+<tbody id="unitsBody"></tbody>
+</table>
+</div>
+</div>
+
+<!-- ==================== TAB 3: EGRESOS ==================== -->
+<div id="egresos" class="tab-panel">
+
+<div class="st">Resumen de egresos por categoría</div>
+<div class="kg">
+<div class="k a"><div class="l">Total presupuestado</div><div class="v">$54.63M</div><div class="s">88.5% incidencia sobre valor proyecto</div></div>
+<div class="k g"><div class="l">Egresado real</div><div class="v">$4.54M</div><div class="s">8.3% del presupuesto</div></div>
+<div class="k r"><div class="l">Por egresar</div><div class="v">$50.09M</div><div class="s">91.7% pendiente</div></div>
+<div class="k bl"><div class="l">Avance de erogaciones</div><div class="v">8.3%</div><div class="s">Pre-construcción</div></div>
+</div>
+
+<div class="cr">
+<div class="cc">
+<h3>Estructura de costos (MDP)</h3>
+<div style="position:relative;height:300px"><canvas id="c_cost_pie"></canvas></div>
+<div class="lg" id="costLeg" style="margin-top:10px"></div>
+</div>
+<div class="cc">
+<h3>Presupuesto vs egresado real por categoría</h3>
+<div style="position:relative;height:300px"><canvas id="c_egr_bar"></canvas></div>
+</div>
+</div>
+
+<div class="st">Desglose presupuestal</div>
+<div class="fc" style="padding:0;overflow:hidden">
+<table class="tbl">
+<thead><tr><th>Categoría</th><th class="ar">Presupuesto</th><th class="ar">Egresado real</th><th class="ar">% Pagado</th><th class="ar">Por egresar</th><th class="ar">% Incidencia</th></tr></thead>
+<tbody>
+<tr><td class="fw">TERRENO (Land Cost)</td><td class="ar">$11,220,000</td><td class="ar">$2,250,000</td><td class="ar">20.1%</td><td class="ar">$8,970,000</td><td class="ar">17.15%</td></tr>
+<tr><td class="fw">INDIRECTOS (Soft Cost)</td><td class="ar">$2,797,374</td><td class="ar">$908,104</td><td class="ar">32.5%</td><td class="ar">$1,889,270</td><td class="ar">4.28%</td></tr>
+<tr style="color:var(--tx2)"><td style="padding-left:20px">Proyectos e ingenierías</td><td class="ar">$396,914</td><td class="ar">$281,914</td><td class="ar">71.0%</td><td class="ar">$115,000</td><td class="ar">0.61%</td></tr>
+<tr style="color:var(--tx2)"><td style="padding-left:20px">Estudios técnicos</td><td class="ar">$49,531</td><td class="ar">$49,531</td><td class="ar">100%</td><td class="ar">$0</td><td class="ar">0.08%</td></tr>
+<tr style="color:var(--tx2)"><td style="padding-left:20px">Factibilidades y conexión</td><td class="ar">$515,224</td><td class="ar">$351,674</td><td class="ar">68.3%</td><td class="ar">$163,550</td><td class="ar">0.79%</td></tr>
+<tr style="color:var(--tx2)"><td style="padding-left:20px">Gestión, trámites y licencias</td><td class="ar">$1,610,360</td><td class="ar">$200,622</td><td class="ar">12.5%</td><td class="ar">$1,409,738</td><td class="ar">2.46%</td></tr>
+<tr style="color:var(--tx2)"><td style="padding-left:20px">Complementarios</td><td class="ar">$225,346</td><td class="ar">$24,363</td><td class="ar">10.8%</td><td class="ar">$200,983</td><td class="ar">0.34%</td></tr>
+<tr><td class="fw">EDIFICACIÓN (Hard Cost)</td><td class="ar">$30,513,285</td><td class="ar">$13,050</td><td class="ar">0.04%</td><td class="ar">$30,500,235</td><td class="ar">46.64%</td></tr>
+<tr style="color:var(--tx2)"><td style="padding-left:20px">Preliminares + demolición</td><td class="ar">$190,000</td><td class="ar">$13,050</td><td class="ar">6.9%</td><td class="ar">$176,950</td><td class="ar">0.29%</td></tr>
+<tr style="color:var(--tx2)"><td style="padding-left:20px">Construcción (Gonzaga)</td><td class="ar">$30,323,285</td><td class="ar">$0</td><td class="ar">0%</td><td class="ar">$30,323,285</td><td class="ar">46.35%</td></tr>
+<tr><td class="fw">COSTOS OPERATIVOS</td><td class="ar">$5,867,681</td><td class="ar">$1,377,590</td><td class="ar">23.5%</td><td class="ar">$4,490,091</td><td class="ar">8.97%</td></tr>
+<tr style="color:var(--tx2)"><td style="padding-left:20px">Fee desarrollador (4%)</td><td class="ar">$2,616,796</td><td class="ar">$0</td><td class="ar">0%</td><td class="ar">$2,616,796</td><td class="ar">4.00%</td></tr>
+<tr style="color:var(--tx2)"><td style="padding-left:20px">Publicidad y marketing</td><td class="ar">$80,252</td><td class="ar">$80,252</td><td class="ar">100%</td><td class="ar">$0</td><td class="ar">0.12%</td></tr>
+<tr style="color:var(--tx2)"><td style="padding-left:20px">Comisiones de venta</td><td class="ar">$2,032,133</td><td class="ar">$1,003,464</td><td class="ar">49.4%</td><td class="ar">$1,028,669</td><td class="ar">3.11%</td></tr>
+<tr style="color:var(--tx2)"><td style="padding-left:20px">Fideicomiso</td><td class="ar">$391,500</td><td class="ar">$208,800</td><td class="ar">53.3%</td><td class="ar">$182,700</td><td class="ar">0.60%</td></tr>
+<tr style="color:var(--tx2)"><td style="padding-left:20px">Seguridad + Postventa</td><td class="ar">$747,000</td><td class="ar">$85,074</td><td class="ar">11.4%</td><td class="ar">$661,926</td><td class="ar">1.14%</td></tr>
+<tr><td class="fw">COSTO FINANCIERO</td><td class="ar">$4,268,748</td><td class="ar">$0</td><td class="ar">0%</td><td class="ar">$4,268,748</td><td class="ar">6.52%</td></tr>
+<tr style="color:var(--tx2)"><td style="padding-left:20px">Comisiones bancarias</td><td class="ar">$1,305,000</td><td class="ar">$0</td><td class="ar">0%</td><td class="ar">$1,305,000</td><td class="ar">1.99%</td></tr>
+<tr style="color:var(--tx2)"><td style="padding-left:20px">Intereses crédito puente</td><td class="ar">$2,963,748</td><td class="ar">$0</td><td class="ar">0%</td><td class="ar">$2,963,748</td><td class="ar">4.53%</td></tr>
+<tr class="tot"><td class="fw">TOTAL EGRESOS</td><td class="ar fw">$54,667,089</td><td class="ar fw">$4,548,744</td><td class="ar fw">8.3%</td><td class="ar fw">$50,118,345</td><td class="ar fw">83.56%</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- ==================== TAB 4: FLUJO ==================== -->
+<div id="flujo" class="tab-panel">
+
+<div class="st">Posición real de caja</div>
+<div class="kg">
+<div class="k g"><div class="l">Total ingresado</div><div class="v">$13.22M</div><div class="s">Cobros reales al 31/mar/2026</div></div>
+<div class="k a"><div class="l">Total egresado</div><div class="v">$4.54M</div><div class="s">Pagos reales al 31/mar/2026</div></div>
+<div class="k g"><div class="l">Flujo neto real</div><div class="v">+$8.69M</div><div class="s">Pre-construcción</div></div>
+<div class="k r"><div class="l">Déficit máx. proyectado</div><div class="v">-$8.79M</div><div class="s">Saldo real al cierre del proyecto</div></div>
+</div>
+
+<div class="st">Flujo de efectivo mensual proyectado</div>
+<div class="fc">
+<div class="lg" style="margin-bottom:8px">
+<span><span class="d" style="background:rgba(29,158,117,.55)"></span>Ingresos</span>
+<span><span class="d" style="background:rgba(226,75,74,.5)"></span>Egresos</span>
+<span><span class="d" style="background:var(--b);width:16px;height:2px;border-radius:1px"></span>Saldo acumulado virtual</span>
+</div>
+<h3>Ingresos vs egresos mensuales y saldo acumulado (MDP) · Oct 2023 — Jul 2027</h3>
+<div style="position:relative;height:340px"><canvas id="c_cf"></canvas></div>
+</div>
+
+<div class="st">Últimos cobros registrados</div>
+<div class="fc" style="padding:0;overflow:hidden">
+<table class="tbl">
+<thead><tr><th>Fecha</th><th>Cliente</th><th>Unidad</th><th class="ar">Monto</th></tr></thead>
+<tbody id="pagosBody"></tbody>
+</table>
+</div>
+</div>
+
+<!-- ==================== TAB 5: UTILIDADES ==================== -->
+<div id="utilidades" class="tab-panel">
+
+<div class="alert"><span style="font-size:16px;flex-shrink:0">&#9888;</span><div><b>Las utilidades anticipadas exceden la UAI del proyecto en $8.79 MDP</b><br>Se dispuso de 1.82x la utilidad real. El déficit requiere inyección de recursos o reducción de compromisos.</div></div>
+
+<div class="st">Análisis de utilidades anticipadas — Escenario A (con fee developer)</div>
+<div class="cr">
+<div class="cc">
+<h3>Composición de utilidades anticipadas — $19.54 MDP</h3>
+<div class="edorow hdr"><div class="name">Concepto</div><div class="amt">Importe</div></div>
+<div class="edorow"><div class="name">Depto. Marlene (301) — Pago anticipado 100%</div><div class="amt">$7,576,200</div></div>
+<div class="edorow"><div class="name">Ingresos no asignados al proyecto</div><div class="amt">$6,978,559</div></div>
+<div class="edorow indent"><div class="name" style="font-size:11px">Anticipos clientes ($13.22M) - Egresos proyecto ($4.54M) - Fee developer ($1.71M)</div><div class="amt"></div></div>
+<div class="edorow"><div class="name">Depto. IAC (302) — Pago de pasivo a IAC de Occidente</div><div class="amt">$4,986,075</div></div>
+<div class="edorow sub"><div class="name">Total utilidades anticipadas</div><div class="amt" style="color:var(--r)">$19,540,834</div></div>
+</div>
+<div class="cc">
+<h3>UAI vs utilidades anticipadas (MDP)</h3>
+<div style="position:relative;height:260px"><canvas id="c_util"></canvas></div>
+<div style="margin-top:12px;padding:12px;background:var(--rbg);border-radius:var(--rd);font-size:11.5px;color:#791F1F">
+<b>Déficit Escenario A:</b> $8,788,018<br>
+<b>Déficit Escenario B (sin fee):</b> $10,494,625<br>
+<span style="font-size:10.5px;color:#993556">El Escenario B es peor porque los ingresos no asignados aumentan al no descontar el fee</span>
+</div>
+</div>
+</div>
+
+<div class="st">Utilidad objetivo y brecha</div>
+<div class="kg">
+<div class="k a"><div class="l">Margen objetivo (UAI)</div><div class="v">17.50%</div><div class="s">Meta de dirección general</div></div>
+<div class="k a"><div class="l">Utilidad objetivo</div><div class="v">$11.45M</div><div class="s">17.5% × $65.42M</div></div>
+<div class="k bl"><div class="l">UAI actual</div><div class="v">$10.75M</div><div class="s">Margen 16.44%</div></div>
+<div class="k r"><div class="l">Brecha vs objetivo</div><div class="v">-$696K</div><div class="s">Requiere +$9,941/m² en Depto. 302</div></div>
+</div>
+</div>
+
+<!-- ==================== TAB 6: FINANCIAMIENTO ==================== -->
+<div id="financiamiento" class="tab-panel">
+
+<div class="st">Crédito puente — Banco SAHARA</div>
+<div class="kg">
+<div class="k bl"><div class="l">Línea autorizada</div><div class="v">$25.0M</div><div class="s">82.4% del costo de edificación</div></div>
+<div class="k bl"><div class="l">Anticipo</div><div class="v">$3.75M</div><div class="s">15% de la línea</div></div>
+<div class="k bl"><div class="l">Ministraciones</div><div class="v">$21.25M</div><div class="s">85% restante por ministrar</div></div>
+<div class="k r"><div class="l">Tasa compuesta</div><div class="v">19.5%</div><div class="s">TIIE 7.3% + Spread 12.2%</div></div>
+</div>
+<div class="kg">
+<div class="k a"><div class="l">Comisión apertura</div><div class="v">4.64%</div><div class="s">$1,160,000</div></div>
+<div class="k a"><div class="l">Costo financiero total</div><div class="v">$4.27M</div><div class="s">6.52% del valor del proyecto</div></div>
+<div class="k bl"><div class="l">Inicio construcción</div><div class="v">Jun 2026</div><div class="s">Mes 33 del proyecto</div></div>
+<div class="k g"><div class="l">Duración obra</div><div class="v">13 meses</div><div class="s">Jun 2026 — Jul 2027</div></div>
+</div>
+
+<div class="st">Pasivo IAC de Occidente</div>
+<div class="cr">
+<div class="cc">
+<h3>Condiciones del crédito simple IAC</h3>
+<div class="edorow hdr"><div class="name">Concepto</div><div class="amt">Valor</div></div>
+<div class="edorow"><div class="name">Saldo del préstamo</div><div class="amt">$4,000,000</div></div>
+<div class="edorow"><div class="name">TIR anual</div><div class="amt">53.0%</div></div>
+<div class="edorow"><div class="name">TIR mensual</div><div class="amt">3.61%</div></div>
+<div class="edorow"><div class="name">% Participación ELEVA Río</div><div class="amt">18.9%</div></div>
+<div class="edorow"><div class="name">Total intereses proyectados</div><div class="amt" style="color:var(--r)">$2,235,424</div></div>
+<div class="edorow"><div class="name">Total pagos a capital</div><div class="amt">$3,117,291</div></div>
+<div class="edorow sub"><div class="name">Costo total del pasivo</div><div class="amt" style="color:var(--r)">$5,352,714</div></div>
+</div>
+<div class="cc">
+<h3>Amortización IAC (MDP)</h3>
+<div style="position:relative;height:280px"><canvas id="c_iac"></canvas></div>
+</div>
+</div>
+
+<div class="st">Fuentes vs usos del proyecto</div>
+<div class="fc">
+<h3>¿De dónde viene y a dónde va el dinero? (MDP)</h3>
+<div style="position:relative;height:300px"><canvas id="c_fuentes"></canvas></div>
+</div>
+</div>
+
+<div class="footer">
+ELEVA RÍO DE JANEIRO — Control Financiero de Proyecto · FIBRAL Desarrollador Inmobiliario<br>
+Grupo Capital OM · Home Desarrollo · Documento confidencial · Corte: 31 de marzo, 2026
+</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+function showTab(id){document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');event.target.classList.add('active')}
+
+const B='#8B6F5E',BL='#B89B8A',BLL='#D4B8A8',G='#1D9E75',R='#E24B4A',A='#EF9F27',BLU='#378ADD',GRY='#73726c',PUR='#AFA9EC',tx='#888780',gr='rgba(0,0,0,.05)';
+const fM=v=>'$'+(v/1e6).toFixed(2)+'M';
+const fK=v=>'$'+Math.round(v).toLocaleString('es-MX');
+
+// ====== WATERFALL ======
+const wL=['Ventas','Costo venta','Ut. bruta','Costos op.','EBITDA','Costo fin.','UAI'];
+const wV=[65.42,-44.53,20.89,-5.87,15.02,-4.27,10.75];
+let wB=[],wT=[],wC=[],run=0;
+wV.forEach((v,i)=>{if(i===0||i===2||i===4||i===6){wB.push(0);wT.push(v);wC.push(G);run=v}else{wB.push(run+v);wT.push(-v);wC.push(R);run+=v}});
+new Chart(document.getElementById('c_wf'),{type:'bar',data:{labels:wL,datasets:[{data:wB,backgroundColor:'transparent',borderWidth:0,stack:'a'},{data:wT,backgroundColor:wC,borderRadius:4,stack:'a'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'$'+Math.abs(c.raw).toFixed(2)+' MDP'}}},scales:{x:{grid:{display:false},ticks:{color:tx,font:{size:10},maxRotation:45,autoSkip:false}},y:{grid:{color:gr},ticks:{color:tx,font:{size:10},callback:v=>'$'+v+'M'}}}}});
+
+// ====== INGRESOS PIE ======
+const ingD=[{n:'Ventas efectivo (cobrado)',v:13.22,c:G},{n:'Por cobrar (durante obra)',v:7.24,c:A},{n:'Por cobrar (cierre)',v:6.97,c:BLU},{n:'Permuta terreno (D.101)',v:8.50,c:BL},{n:'Permuta obra (D.201)',v:8.00,c:BLL},{n:'Depto 302 → IAC',v:4.99,c:R},{n:'Crédito puente SAHARA',v:16.50,c:'#534AB7'}];
+new Chart(document.getElementById('c_ing_pie'),{type:'doughnut',data:{labels:ingD.map(d=>d.n),datasets:[{data:ingD.map(d=>d.v),backgroundColor:ingD.map(d=>d.c),borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'50%',plugins:{legend:{display:false}}}});
+const iL=document.getElementById('ingLeg');ingD.forEach(d=>{iL.innerHTML+=`<span><span class="d" style="background:${d.c}"></span>${d.n} $${d.v.toFixed(1)}M</span>`});
+
+// ====== UNITS ======
+const units=[
+{id:'Local 01',tp:'LOCAL',nv:'PB',m2:39.48,pl:3152000,pv:3152000,st:'Vendido',co:931563,pc:29.6,pcob:2220437,comp:'José Antonio Jaime'},
+{id:'Local 02',tp:'LOCAL',nv:'PB',m2:38.07,pl:2855250,pv:2855250,st:'Vendido',co:400000,pc:14.0,pcob:2455250,comp:'José Antonio Jaime'},
+{id:'Local 03',tp:'LOCAL',nv:'PB',m2:61.50,pl:4270000,pv:4270000,st:'Vendido',co:1455930,pc:34.1,pcob:2814070,comp:'Alferta Inmobiliaria'},
+{id:'Local 04',tp:'LOCAL',nv:'PB',m2:19.26,pl:1732500,pv:1732500,st:'Vendido',co:722250,pc:41.7,pcob:1010250,comp:'Jessica S. Gutierrez'},
+{id:'Local 05',tp:'LOCAL',nv:'PB',m2:39.60,pl:2843240,pv:2843240,st:'Vendido',co:625000,pc:22.0,pcob:2218240,comp:'Martha Y. Alvarado'},
+{id:'Depto. 101',tp:'TIPO 1',nv:'N1',m2:122.30,pl:8500000,pv:8500000,st:'Permuta aportante',co:0,pc:0,pcob:0,comp:'Enrique González Medina'},
+{id:'Depto. 102',tp:'TIPO 2',nv:'N1',m2:69.98,pl:4550000,pv:4550000,st:'Vendido',co:1516667,pc:33.3,pcob:3033333,comp:'Miroslaba Rodriguez'},
+{id:'Depto. 103',tp:'TIPO 3',nv:'N1',m2:59.54,pl:3700000,pv:3700000,st:'Vendido',co:1005000,pc:27.2,pcob:2695000,comp:'Douglas Rodríguez'},
+{id:'Depto. 201',tp:'TIPO 1',nv:'N2',m2:122.30,pl:8000000,pv:8000000,st:'Permuta',co:0,pc:0,pcob:0,comp:'Ramón Martínez'},
+{id:'Depto. 202',tp:'TIPO 2',nv:'N2',m2:69.98,pl:4700000,pv:4700000,st:'Vendido',co:3194500,pc:68.0,pcob:1505500,comp:'Gerardo Rountree'},
+{id:'Depto. 203',tp:'TIPO 3',nv:'N2',m2:59.54,pl:4250000,pv:4250000,st:'Vendido',co:1300000,pc:30.6,pcob:2950000,comp:'Ana María Figueroa'},
+{id:'Depto. 301',tp:'TIPO 1',nv:'N3',m2:122.30,pl:7576200,pv:7576200,st:'Vendido',co:7576200,pc:100,pcob:0,comp:'Marlene G. Ventura'},
+{id:'Depto. 302',tp:'TIPO 2',nv:'N3',m2:69.98,pl:4986075,pv:0,st:'Disponible',co:0,pc:0,pcob:0,comp:'→ Pasivo IAC'},
+{id:'Depto. 303',tp:'TIPO 3',nv:'N3',m2:59.54,pl:4304640,pv:4304640,st:'Vendido',co:2070000,pc:48.1,pcob:2234640,comp:'Miriam Priscilla'}
+];
+
+const gd=document.getElementById('unitGrid');
+units.forEach(u=>{const cls=u.st==='Vendido'?'vnd':u.st==='Disponible'?'dis':u.st==='Permuta'?'prm':'pra';gd.innerHTML+=`<div class="uc ${cls}"><div class="uid">${u.id}</div><div class="utp">${u.tp} · ${u.nv}</div><div class="upr">${fM(u.pl)}</div><div class="upct">${u.pc}% cobrado</div><div class="ubar" style="width:${u.pc}%"></div></div>`});
+
+function renderUnitsTable(data){const tb=document.getElementById('unitsBody');tb.innerHTML='';data.forEach(u=>{const stcls=u.st==='Vendido'?'gn':u.st==='Disponible'?'bu':u.st==='Permuta'?'am':'gy';tb.innerHTML+=`<tr><td class="fw">${u.id}</td><td>${u.tp}</td><td>${u.nv}</td><td class="ar">${u.m2}</td><td class="ar">${fK(u.pl)}</td><td class="ar">${u.pv?fK(u.pv):'—'}</td><td><span class="pill ${stcls}">${u.st}</span></td><td class="ar">${u.co?fK(u.co):'—'}</td><td class="ar">${u.pc}%</td><td class="ar">${u.pcob?fK(u.pcob):'—'}</td><td>${u.comp}</td></tr>`})}
+renderUnitsTable(units);
+
+function filterUnits(){const st=document.getElementById('filterEstatus').value;const nv=document.getElementById('filterNivel').value;let f=units;if(st!=='all')f=f.filter(u=>u.st===st);if(nv!=='all')f=f.filter(u=>u.nv===nv);renderUnitsTable(f)}
+
+// ====== COBRANZA BAR ======
+const cobU=units.filter(u=>u.st==='Vendido');
+new Chart(document.getElementById('c_cob'),{type:'bar',data:{labels:cobU.map(u=>u.id),datasets:[{data:cobU.map(u=>u.pc),backgroundColor:cobU.map(u=>u.pc>=80?G:u.pc>=40?A:BLU),borderRadius:4,barThickness:22}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{max:110,grid:{color:gr},ticks:{color:tx,font:{size:10},callback:v=>v+'%'}},y:{grid:{display:false},ticks:{color:tx,font:{size:10}}}}}});
+
+// ====== COST PIE ======
+const csD=[{n:'Edificación',v:30.51,c:B},{n:'Terreno',v:11.22,c:BL},{n:'Costo financiero',v:4.27,c:R},{n:'Indirectos',v:2.80,c:BLL},{n:'Gastos op.',v:2.62,c:A},{n:'Publicidad/Vtas',v:2.11,c:BLU},{n:'Postventa',v:0.75,c:GRY},{n:'Fideicomiso',v:0.39,c:PUR}];
+const csT=csD.reduce((s,c)=>s+c.v,0);
+new Chart(document.getElementById('c_cost_pie'),{type:'doughnut',data:{labels:csD.map(c=>c.n),datasets:[{data:csD.map(c=>c.v),backgroundColor:csD.map(c=>c.c),borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'52%',plugins:{legend:{display:false}}}});
+const cL=document.getElementById('costLeg');csD.forEach(c=>{cL.innerHTML+=`<span><span class="d" style="background:${c.c}"></span>${c.n} ${Math.round(c.v/csT*100)}%</span>`});
+
+// ====== EGRESOS BAR ======
+const eCats=['Terreno','Soft Cost','Hard Cost','Gastos Op.','Comisiones','Fideicomiso','Publicidad','Seguridad','Postventa','Costo Fin.'];
+const ePres=[11.22,2.80,30.51,2.62,2.03,0.39,0.08,0.18,0.57,4.27];
+const ePag=[2.25,0.91,0.01,0,1.00,0.21,0.08,0,0,0];
+new Chart(document.getElementById('c_egr_bar'),{type:'bar',data:{labels:eCats,datasets:[{label:'Presupuesto',data:ePres,backgroundColor:'rgba(139,111,94,.3)',borderRadius:4},{label:'Egresado real',data:ePag,backgroundColor:G,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',labels:{boxWidth:10,font:{size:10},color:tx}}},scales:{x:{grid:{display:false},ticks:{color:tx,font:{size:9},maxRotation:45,autoSkip:false}},y:{grid:{color:gr},ticks:{color:tx,font:{size:10},callback:v=>'$'+v+'M'}}}}});
+
+// ====== CASH FLOW ======
+const cfL=['Oct 23','','Dic','','Feb 24','','Abr','','Jun','','Ago','','Oct','','Dic','Ene 25','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic','Ene 26','Feb','Mar 26','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic','Ene 27','Feb','Mar','Abr','May','Jun','Jul 27'];
+const cfI=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.30,0,0.91,0,1.15,0,0.06,0.05,3.38,1.01,0.43,0.71,0.13,0.15,3.93,1.38,0.57,6.17,0.19,5.94,2.18,1.98,2.28,1.90,1.90,2.20,1.90,1.90,16.78,5.56,19.37];
+const cfE=[.06,.10,.09,.16,.06,.06,.09,.06,.06,.06,.06,.06,.07,.06,.06,.06,.09,.06,.33,.22,.10,.39,.33,.67,.37,.07,.64,.19,.58,1.05,2.18,1.33,4.36,4.20,2.32,3.05,2.77,2.19,2.11,2.15,2.01,2.08,2.07,15.81,7.08,12.72];
+const cfS=[-.06,-.15,-.24,-.40,-.46,-.52,-.61,-.67,-.73,-.78,-.84,-.90,-.97,-1.03,-1.09,.15,.06,.91,.58,1.51,1.41,1.07,.80,3.51,4.15,4.51,4.58,4.52,4.10,6.98,6.18,5.41,7.23,3.22,6.84,5.96,5.17,5.25,5.04,4.80,4.99,4.81,4.64,5.61,4.10,10.75];
+new Chart(document.getElementById('c_cf'),{type:'bar',data:{labels:cfL,datasets:[{label:'Ingresos',data:cfI,backgroundColor:'rgba(29,158,117,.5)',borderRadius:2,order:2},{label:'Egresos',data:cfE.map(v=>-v),backgroundColor:'rgba(226,75,74,.45)',borderRadius:2,order:3},{label:'Saldo acum.',data:cfS,type:'line',borderColor:B,backgroundColor:'transparent',borderWidth:2.5,pointRadius:0,tension:.3,order:1}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:tx,font:{size:8},maxRotation:60,autoSkip:true,maxTicksLimit:20},stacked:true},y:{grid:{color:gr},ticks:{color:tx,font:{size:10},callback:v=>'$'+v+'M'},stacked:true}}}});
+
+// ====== PAYMENTS ======
+const pagos=[{f:'17/03/2026',cl:'Ana María Figueroa',u:'Depto. 203',m:1290000},{f:'17/03/2026',cl:'José Antonio Jaime',u:'Local 01',m:150000},{f:'17/03/2026',cl:'Celeste Capital',u:'Local 05',m:45000},{f:'10/03/2026',cl:'Jessica Gutierrez',u:'Local 04',m:38500},{f:'02/03/2026',cl:'Miriam Priscila',u:'Depto. 303',m:670000},{f:'27/02/2026',cl:'Miroslaba Rodriguez',u:'Depto. 102',m:50556},{f:'16/02/2026',cl:'Celeste Capital',u:'Local 05',m:45000},{f:'13/02/2026',cl:'Jessica Gutierrez',u:'Local 04',m:38500},{f:'30/01/2026',cl:'Miroslaba Rodriguez',u:'Depto. 102',m:50556},{f:'15/01/2026',cl:'Celeste Capital',u:'Local 05',m:45000},{f:'12/01/2026',cl:'Jessica Gutierrez',u:'Local 04',m:38500},{f:'30/12/2025',cl:'Miroslaba Rodriguez',u:'Depto. 102',m:50556},{f:'19/12/2025',cl:'José Antonio Jaime',u:'Local 01',m:223963},{f:'15/12/2025',cl:'Celeste Capital',u:'Local 05',m:45000},{f:'15/12/2025',cl:'Jessica Gutierrez',u:'Local 04',m:38500}];
+const pb=document.getElementById('pagosBody');pagos.forEach(p=>{pb.innerHTML+=`<tr><td>${p.f}</td><td>${p.cl}</td><td>${p.u}</td><td class="ar fw">$${p.m.toLocaleString('es-MX')}</td></tr>`});
+
+// ====== UTILIDADES CHART ======
+new Chart(document.getElementById('c_util'),{type:'bar',data:{labels:['UAI del proyecto','Utilidades anticipadas','Déficit'],datasets:[{data:[10.75,19.54,8.79],backgroundColor:[G,R,'rgba(226,75,74,.3)'],borderColor:['transparent','transparent',R],borderWidth:[0,0,2],borderDash:[0,0,5],borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'$'+c.raw.toFixed(2)+' MDP'}}},scales:{x:{grid:{display:false},ticks:{color:tx,font:{size:11}}},y:{grid:{color:gr},ticks:{color:tx,font:{size:10},callback:v=>'$'+v+'M'}}}}});
+
+// ====== IAC AMORTIZATION ======
+const iacL=['Jun 25','Jul','Ago','Sep','Oct','Nov','Dic','Ene 26','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+const iacSaldo=[2.63,2.63,3.41,4.00,4.00,4.00,4.00,4.00,4.00,4.00,4.00,4.00,4.00,4.00,2.64,2.20,1.76,1.32,0.88];
+const iacInt=[0,.095,.123,.144,.144,.144,.144,.144,.144,.144,.144,.144,.144,.144,.144,.095,.079,.064,.048];
+new Chart(document.getElementById('c_iac'),{type:'line',data:{labels:iacL,datasets:[{label:'Saldo insoluto',data:iacSaldo,borderColor:R,backgroundColor:'rgba(226,75,74,.1)',fill:true,tension:.3,pointRadius:2},{label:'Pago intereses',data:iacInt,borderColor:A,backgroundColor:'transparent',borderDash:[4,4],tension:.3,pointRadius:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',labels:{boxWidth:10,font:{size:10},color:tx}}},scales:{x:{grid:{display:false},ticks:{color:tx,font:{size:9},maxRotation:45}},y:{grid:{color:gr},ticks:{color:tx,font:{size:10},callback:v=>'$'+v+'M'}}}}});
+
+// ====== FUENTES VS USOS ======
+new Chart(document.getElementById('c_fuentes'),{type:'bar',data:{labels:['Cobrado efectivo','Por cobrar\n(vendidos)','Permuta\nterreno','Permuta\nobra','Depto 302\n(→ IAC)','Crédito\npuente','TOTAL\nFUENTES','','Land Cost','Soft Cost','Hard Cost','Costos\noperativos','Costo\nfinanciero','TOTAL\nUSOS'],datasets:[{data:[13.22,14.21,8.50,8.00,4.99,25.00,73.92,0,11.22,2.80,30.51,5.87,4.27,54.67],backgroundColor:[G,A,BL,BLL,R,'#534AB7','rgba(29,158,117,.3)','transparent','rgba(226,75,74,.6)','rgba(226,75,74,.5)','rgba(226,75,74,.7)','rgba(226,75,74,.4)','rgba(226,75,74,.45)','rgba(226,75,74,.3)'],borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.raw?'$'+c.raw.toFixed(2)+' MDP':''}}},scales:{x:{grid:{display:false},ticks:{color:tx,font:{size:9},maxRotation:45,autoSkip:false}},y:{grid:{color:gr},ticks:{color:tx,font:{size:10},callback:v=>'$'+v+'M'}}}}});
+</script>
+</body>
+</html>
